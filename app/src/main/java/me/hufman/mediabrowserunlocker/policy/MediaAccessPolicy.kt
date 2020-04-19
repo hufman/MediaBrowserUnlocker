@@ -1,5 +1,5 @@
 package me.hufman.mediabrowserunlocker.policy
 
 interface MediaAccessPolicy {
-	fun getRootAction(servicePackage: String, clientPackage: String): MediaAccessPolicyAction
+	fun getRootAction(servicePackage: String, clientPackage: String, originalRoot: String?): MediaAccessPolicyAction
 }

@@ -2,7 +2,7 @@ package me.hufman.mediabrowserunlocker.logger
 
 import android.util.Log
 
-class MediaAccessLoggerLogcat :
+open class MediaAccessLoggerLogcat :
 	MediaAccessLogger {
 	override fun onGetRoot(
 		servicePackage: String,

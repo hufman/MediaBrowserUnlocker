@@ -1,39 +1,36 @@
 package me.hufman.mediabrowserunlocker
 
-import android.service.media.MediaBrowserService
-import android.support.v4.media.MediaBrowserCompat
-import androidx.media.MediaBrowserServiceCompat
 import me.hufman.mediabrowserunlocker.logger.MediaAccessLogger
 import me.hufman.mediabrowserunlocker.policy.MediaAccessPolicy
 import me.hufman.mediabrowserunlocker.policy.MediaAccessPolicyAction
 
-class UnlockerEngine(
-	val browseResultCollation: BrowseResultCollation,
+interface UnlockerEngine: MediaAccessLogger {
+	override fun onGetRoot(servicePackage: String, clientPackage: String, originalRoot: String?, replacementRoot: String?)
+	override fun onLoadChildren(servicePackage: String, parentId: String, results: List<*>?)
+	fun getRoot(servicePackage: String, clientPackage: String, originalRoot: String?): String?
+}
+
+class UnlockerEngineLocal(
 	val policy: MediaAccessPolicy,
 	val logger: MediaAccessLogger
-) {
-	fun onGetRoot(servicePackage: String, clientPackage: String, origRoot: String?): String? {
-		val action = policy.getRootAction(servicePackage, clientPackage)
+) : UnlockerEngine {
+	override fun onGetRoot(servicePackage: String, clientPackage: String, originalRoot: String?, replacementRoot: String?) {
+		logger.onGetRoot(servicePackage, clientPackage, originalRoot, replacementRoot)
+	}
+
+	override fun onLoadChildren(servicePackage: String, parentId: String, results: List<*>?) {
+		logger.onLoadChildren(servicePackage, parentId, results)
+	}
+
+	override fun getRoot(servicePackage: String, clientPackage: String, originalRoot: String?): String? {
+		val action = policy.getRootAction(servicePackage, clientPackage, originalRoot)
 		val newRoot = when (action) {
 			is MediaAccessPolicyAction.OVERRIDE_ROOT -> action.newRoot
-			is MediaAccessPolicyAction.OVERRIDE_REJECTED_ROOT -> origRoot ?: action.newRoot
-			else -> origRoot
+			is MediaAccessPolicyAction.OVERRIDE_REJECTED_ROOT -> originalRoot ?: action.newRoot
+			else -> originalRoot
 		}
-		logger.onGetRoot(servicePackage, clientPackage, origRoot, newRoot)
+		logger.onGetRoot(servicePackage, clientPackage, originalRoot, newRoot)
 		return newRoot
 	}
 
-	fun beforeOnLoadChildren(servicePackage: String, parentId: String, result: MediaBrowserService.Result<*>) {
-		browseResultCollation.startResult(result, servicePackage, parentId)
-	}
-	fun beforeOnLoadChildren(servicePackage: String, parentId: String, result: MediaBrowserServiceCompat.Result<*>) {
-		browseResultCollation.startResult(result, servicePackage, parentId)
-	}
-
-	fun onCompleteLoadChildren(result: MediaBrowserService.Result<*>, value: List<MediaBrowserCompat.MediaItem>?) {
-		browseResultCollation.completeResult(result, value)
-	}
-	fun onCompleteLoadChildren(result: MediaBrowserServiceCompat.Result<*>, value: List<MediaBrowserCompat.MediaItem>?) {
-		browseResultCollation.completeResult(result, value)
-	}
 }

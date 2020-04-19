@@ -9,21 +9,25 @@ import org.apache.commons.collections4.map.LRUMap
 data class BrowseResultContext(val servicePackage: String, val parentId: String)
 
 class BrowseResultCollation(val logger: MediaAccessLogger) {
-	private val resultMetadata = LRUMap<Any, BrowseResultContext>(16)
+	private val resultMetadata = LRUMap<Any, BrowseResultContext>(8)
 
 	fun startResult(
-		result: MediaBrowserService.Result<*>,
 		servicePackage: String,
-		parentId: String
-	) = _startResult(result, servicePackage, parentId)
+		parentId: String,
+		result: MediaBrowserService.Result<*>
+	) = _startResult(servicePackage, parentId, result)
 
 	fun startResult(
-		result: MediaBrowserServiceCompat.Result<*>,
 		servicePackage: String,
-		parentId: String
-	) = _startResult(result, servicePackage, parentId)
+		parentId: String,
+		result: MediaBrowserServiceCompat.Result<*>
+	) = _startResult(servicePackage, parentId, result)
 
-	private fun _startResult(result: Any, servicePackage: String, parentId: String) {
+	private fun _startResult(
+		servicePackage: String,
+		parentId: String,
+		result: Any
+	) {
 		val context = BrowseResultContext(servicePackage, parentId)
 		synchronized(this) {
 			resultMetadata[result] = context

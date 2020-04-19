@@ -1,8 +1,6 @@
 package me.hufman.mediabrowserunlocker.hooks
 
 import android.os.Bundle
-import android.service.media.MediaBrowserService
-import androidx.media.MediaBrowserServiceCompat
 import de.robv.android.xposed.XC_MethodHook
 import me.hufman.mediabrowserunlocker.UnlockerEngine
 import java.lang.reflect.Method
@@ -34,7 +32,7 @@ class GetRootHook(val servicePackage: String, val unlockerEngine: UnlockerEngine
 			originalExtrasField.get(originalResult) as? Bundle
 		}
 
-		val newRoot = unlockerEngine.onGetRoot(servicePackage, clientPackage, originalRoot)
+		val newRoot = unlockerEngine.getRoot(servicePackage, clientPackage, originalRoot)
 
 		// update the newRoot if needed
 		if (newRoot != originalRoot) {

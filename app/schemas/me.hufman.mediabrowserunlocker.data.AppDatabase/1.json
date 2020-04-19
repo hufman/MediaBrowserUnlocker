@@ -1,0 +1,75 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "acfa5768dbc17393380fef5e6bf55ea2",
+    "entities": [
+      {
+        "tableName": "MediaRoot",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `lastAccess` INTEGER NOT NULL, `servicePackage` TEXT NOT NULL, `clientPackage` TEXT NOT NULL, `rootId` TEXT, `success` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastAccess",
+            "columnName": "lastAccess",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "servicePackage",
+            "columnName": "servicePackage",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clientPackage",
+            "columnName": "clientPackage",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rootId",
+            "columnName": "rootId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "success",
+            "columnName": "success",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_MediaRoot_servicePackage_clientPackage_rootId",
+            "unique": true,
+            "columnNames": [
+              "servicePackage",
+              "clientPackage",
+              "rootId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_MediaRoot_servicePackage_clientPackage_rootId` ON `${TABLE_NAME}` (`servicePackage`, `clientPackage`, `rootId`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'acfa5768dbc17393380fef5e6bf55ea2')"
+    ]
+  }
+}

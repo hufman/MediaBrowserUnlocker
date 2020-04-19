@@ -3,6 +3,7 @@ package me.hufman.mediabrowserunlocker
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import androidx.media.MediaBrowserServiceCompat
+import me.hufman.mediabrowserunlocker.hooks.MediaServiceHook
 import org.junit.Assert.*
 import org.junit.Test
 import kotlin.reflect.jvm.javaMethod
@@ -38,13 +39,13 @@ class XposedHookTest {
 	}
 	@Test
 	fun onGetRoot() {
-		val function = XposedHook.discoverOnGetRoot(ObfuscatedSubject::class.java)
+		val function = MediaServiceHook.discoverOnGetRoot(ObfuscatedSubject::class.java)
 		assertEquals("root", function?.name)
 	}
 
 	@Test
 	fun onLoadChildren() {
-		val function = XposedHook.discoverLoadChildren(ObfuscatedSubject::class.java)
+		val function = MediaServiceHook.discoverLoadChildren(ObfuscatedSubject::class.java)
 		assertEquals("children", function?.name)
 	}
 }

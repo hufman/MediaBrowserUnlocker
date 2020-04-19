@@ -16,7 +16,7 @@ class BrowseResultCollationTest {
 		val result = mock<MediaBrowserService.Result<*>>()
 		val value = listOf(mock<MediaBrowserCompat.MediaItem>())
 		val subject = BrowseResultCollation(logger)
-		subject.startResult(result, "packageName", "parentId")
+		subject.startResult("packageName", "parentId", result)
 		verifyNoMoreInteractions(logger)
 		subject.completeResult(result, value)
 		verify(logger).onLoadChildren("packageName", "parentId", value)
