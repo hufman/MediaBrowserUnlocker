@@ -12,6 +12,12 @@ import java.lang.reflect.Method
  *   - optionally alter the returned root
  */
 class GetRootHook(val servicePackage: String, val unlockerEngine: UnlockerEngine): XC_MethodHook() {
+	override fun beforeHookedMethod(param: MethodHookParam?) {
+		param ?: return
+		param.args[0] = "com.google.android.projection.gearhead"    // audible does setup with this
+		param.args[1] = 1000    // magic UID
+	}
+
 	override fun afterHookedMethod(param: MethodHookParam?) {
 		val clientPackage = param?.args?.getOrNull(0) as? String
 		if (clientPackage == null) {
